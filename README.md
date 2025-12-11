@@ -5,7 +5,6 @@
 ![Python](https://img.shields.io/badge/Python-3.x-blue?style=for-the-badge&logo=python)
 ![MySQL](https://img.shields.io/badge/MySQL-8.0-orange?style=for-the-badge&logo=mysql)
 ![XAMPP](https://img.shields.io/badge/XAMPP-Required-orange?style=for-the-badge)
-![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
 ![Status](https://img.shields.io/badge/Status-Active-success?style=for-the-badge)
 
 **A futuristic, feature-rich restaurant management system built with Python and MySQL**
@@ -29,8 +28,6 @@
 - [Project Structure](#-project-structure)
 - [Configuration](#-configuration)
 - [Troubleshooting](#-troubleshooting)
-- [Contributing](#-contributing)
-- [License](#-license)
 
 ---
 
@@ -472,24 +469,11 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ---
 
-## 📝 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-## 🙏 Acknowledgments
-
-- [TTKBootstrap](https://github.com/israel-dryer/ttkbootstrap) for the amazing UI components
-- MySQL Community for the robust database system
-
----
-
 ## 📧 Contact
 
-**Project Maintainer** - [Your Name]
+**Project Maintainer** - Abdelrahman ElBatanouny
 
-Project Link: [https://github.com/yourusername/titanium-os](https://github.com/yourusername/titanium-os)
+Project Link: [https://github.com/yourusername/titanium-os](https://github.com/Batanounyy/TitaniumOS)
 
 ---
 
