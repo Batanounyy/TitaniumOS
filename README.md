@@ -11,6 +11,12 @@
 
 > ⚠️ **Note:** This application is designed to run on **XAMPP MySQL**. Make sure XAMPP is installed and MySQL service is running before starting the application.
 
+<div align="center">
+
+📄 **[Download Project Report (PDF)](https://github.com/Batanounyy/TitaniumOS/blob/6acebdea94dad1978d4af81b87bc16eea0a06071/System_Analysis_Project.pdf)** 📄
+
+</div>
+
 [Features](#-features) • [Installation](#-installation) • [Usage](#-usage) • [Screenshots](#-screenshots) • [Tech Stack](#-tech-stack)
 
 </div>
@@ -28,6 +34,7 @@
 - [Project Structure](#-project-structure)
 - [Configuration](#-configuration)
 - [Troubleshooting](#-troubleshooting)
+- [Developers](#-developers)
 
 ---
 
@@ -469,11 +476,22 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ---
 
+## 👥 Developers
+
+This project was developed by:
+
+- **Abdelrahman ElBatanouny** - 232403
+- **Omar Sameh Mohamed Ali** - 235153
+- **Mohamed Raed Atef** - 234197
+- **Mahmoud Mohamed** - 231437
+
+---
+
 ## 📧 Contact
 
 **Project Maintainer** - Abdelrahman ElBatanouny
 
-Project Link: [https://github.com/yourusername/titanium-os](https://github.com/Batanounyy/TitaniumOS)
+Project Link: [https://github.com/Batanounyy/TitaniumOS](https://github.com/Batanounyy/TitaniumOS)
 
 ---
 
