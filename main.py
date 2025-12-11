@@ -6,6 +6,7 @@ import mysql.connector
 import csv
 from datetime import datetime
 import os
+import webbrowser
 
 
 class DB:
@@ -794,7 +795,11 @@ Thank you!
         # #endregion
         p_exp = tb.Frame(adm_nb); adm_nb.add(p_exp, text="Export")
         
-        # G. Logout Button in Admin Dashboard
+        # G. About
+        p_about = tb.Frame(adm_nb); adm_nb.add(p_about, text="About")
+        self.setup_admin_about(p_about)
+        
+        # H. Logout Button in Admin Dashboard
         logout_frame = tb.Frame(self.tab_admin, bootstyle="dark")
         logout_frame.pack(side=BOTTOM, fill=X, padx=10, pady=5)
         logout_btn = tb.Button(logout_frame, text="[LOGOUT]", command=self.logout_admin, 
@@ -1289,6 +1294,118 @@ Thank you!
                 writer = csv.writer(csvfile)
                 writer.writerows(rows)
             messagebox.showinfo("Success", "Data Exported")
+
+    # --- ADMIN: ABOUT ---
+    def setup_admin_about(self, p):
+        """Setup About tab with software information"""
+        # Main container with padding
+        main_frame = tb.Frame(p, padding=40)
+        main_frame.pack(fill=BOTH, expand=True)
+        
+        # Title
+        title_label = tb.Label(main_frame, text="TITANIUM OS", 
+                              font=("Orbitron", 28, "bold"), bootstyle="info")
+        title_label.pack(pady=(0, 10))
+        
+        subtitle_label = tb.Label(main_frame, text="Restaurant Management System", 
+                                 font=("Orbitron", 14), bootstyle="secondary")
+        subtitle_label.pack(pady=(0, 30))
+        
+        # Version
+        version_frame = tb.Frame(main_frame)
+        version_frame.pack(pady=20)
+        version_label = tb.Label(version_frame, text="Version", 
+                                font=("Orbitron", 12, "bold"), bootstyle="info")
+        version_label.pack(side=LEFT, padx=(0, 10))
+        version_value = tb.Label(version_frame, text="1.0", 
+                                font=("Consolas", 14, "bold"), bootstyle="success")
+        version_value.pack(side=LEFT)
+        
+        # Separator
+        separator = ttk.Separator(main_frame, orient='horizontal')
+        separator.pack(fill=X, pady=30, padx=50)
+        
+        # Built by section
+        built_by_label = tb.Label(main_frame, text="Built By:", 
+                                  font=("Orbitron", 14, "bold"), bootstyle="info")
+        built_by_label.pack(pady=(0, 20))
+        
+        # Developers list
+        developers_frame = tb.Frame(main_frame)
+        developers_frame.pack(pady=10)
+        
+        developers = [
+            ("Abdelrahman ElBatanouny", "232403"),
+            ("Omar Sameh Mohamed Ali", "235153"),
+            ("Mohamed Raed Atef", "234197")
+        ]
+        
+        for name, student_id in developers:
+            dev_frame = tb.Frame(developers_frame)
+            dev_frame.pack(pady=8, fill=X, padx=50)
+            
+            name_label = tb.Label(dev_frame, text=name, 
+                                 font=("Consolas", 12), bootstyle="inverse-dark")
+            name_label.pack(side=LEFT)
+            
+            id_label = tb.Label(dev_frame, text=f"ID: {student_id}", 
+                              font=("Consolas", 11), bootstyle="secondary")
+            id_label.pack(side=RIGHT)
+        
+        # Separator
+        separator2 = ttk.Separator(main_frame, orient='horizontal')
+        separator2.pack(fill=X, pady=30, padx=50)
+        
+        # GitHub link section
+        github_frame = tb.Frame(main_frame)
+        github_frame.pack(pady=20)
+        
+        github_label = tb.Label(github_frame, text="GitHub Repository:", 
+                               font=("Orbitron", 12, "bold"), bootstyle="info")
+        github_label.pack(pady=(0, 10))
+        
+        github_url = "https://github.com/Batanounyy/TitaniumOS"
+        
+        # Use a function to open the URL
+        def open_github(event=None):
+            try:
+                webbrowser.open_new(github_url)
+            except Exception as e:
+                messagebox.showerror("Error", f"Could not open browser: {str(e)}\n\nURL: {github_url}")
+        
+        # Create clickable link using Label with proper binding
+        link_container = tb.Frame(github_frame)
+        link_container.pack()
+        
+        github_link = tb.Label(link_container, text=github_url, 
+                              font=("Consolas", 11), 
+                              foreground="blue",
+                              cursor="hand2")
+        github_link.pack()
+        github_link.bind("<Button-1>", open_github)
+        
+        # Add hover effect
+        def on_enter(e):
+            github_link.config(foreground="darkblue")
+            github_link.config(font=("Consolas", 11, "underline"))
+        def on_leave(e):
+            github_link.config(foreground="blue")
+            github_link.config(font=("Consolas", 11))
+        
+        github_link.bind("<Enter>", on_enter)
+        github_link.bind("<Leave>", on_leave)
+        
+        # Also add a button as alternative
+        open_btn = tb.Button(link_container, text="[Open in Browser]", 
+                            command=open_github,
+                            bootstyle="info-outline",
+                            width=20)
+        open_btn.pack(pady=(10, 0))
+        
+        # Footer
+        footer_label = tb.Label(main_frame, text="Made with ❤️ using Python", 
+                               font=("Consolas", 10), bootstyle="secondary")
+        footer_label.pack(side=BOTTOM, pady=20)
 
 if __name__ == "__main__":
     app = TitaniumApp()
