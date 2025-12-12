@@ -504,9 +504,16 @@ class TitaniumApp(tb.Window):
         if action == 'Cancel':
             if messagebox.askyesno("Confirm", "Cancel Order? This will return items to stock."):
                 # Get items to return stock
-                items = db.fetch("SELECT items FROM orders WHERE id=%s", (order_id,))[0][0]
+                items_row = db.fetch("SELECT items, table_num FROM orders WHERE id=%s", (order_id,))
+                items = items_row[0][0] if items_row else ""
+                table_num = items_row[0][1] if items_row else None
                 db.restore_inventory_stock(items)
                 db.execute("UPDATE orders SET status='Cancelled' WHERE id=%s", (order_id,))
+                if table_num:
+                    # #region agent log
+                    import json, time; log_file = open(r'd:\Programmming\@Python\Titanium\.cursor\debug.log','a',encoding='utf-8'); log_file.write(json.dumps({"sessionId":"debug-session","runId":"pre-fix","hypothesisId":"HTABLE","location":"main.py:kitchen_action","message":"Cancel sets table available","data":{"orderId":order_id,"table":table_num,"timestamp":int(time.time()*1000)}})+"\n"); log_file.close()
+                    # #endregion
+                    db.execute("UPDATE tables SET status='Available', occupied_at=NULL WHERE table_num=%s", (table_num,))
         else:
             db.execute("UPDATE orders SET status='Ready' WHERE id=%s", (order_id,))
         
@@ -562,6 +569,9 @@ class TitaniumApp(tb.Window):
         cancel_btn = tb.Button(btn_box, text="[CANCEL ORDER]", command=self.cancel_from_status, 
                               bootstyle="danger", width=20)
         cancel_btn.pack(fill=X)
+
+        # Bind selection to show bill details
+        self.status_tree.bind("<<TreeviewSelect>>", self.preview_bill)
 
     def calculate_time_elapsed(self, created_at_str):
         """Calculate time elapsed since order was created"""
@@ -699,9 +709,16 @@ Thank you!
         oid = self.status_tree.item(sel[0])['values'][0]
         
         if messagebox.askyesno("Confirm", "Cancel order and restore stock?"):
-            items = db.fetch("SELECT items FROM orders WHERE id=%s", (oid,))[0][0]
+            items_row = db.fetch("SELECT items, table_num FROM orders WHERE id=%s", (oid,))
+            items = items_row[0][0] if items_row else ""
+            table_num = items_row[0][1] if items_row else None
             db.restore_inventory_stock(items)
             db.execute("UPDATE orders SET status='Cancelled' WHERE id=%s", (oid,))
+            if table_num:
+                # #region agent log
+                import json, time; log_file = open(r'd:\Programmming\@Python\Titanium\.cursor\debug.log','a',encoding='utf-8'); log_file.write(json.dumps({"sessionId":"debug-session","runId":"pre-fix","hypothesisId":"HTABLE","location":"main.py:cancel_from_status","message":"Status cancel sets table available","data":{"orderId":oid,"table":table_num,"timestamp":int(time.time()*1000)}})+"\n"); log_file.close()
+                # #endregion
+                db.execute("UPDATE tables SET status='Available', occupied_at=NULL WHERE table_num=%s", (table_num,))
             self.refresh_all_data()
 
     # =========================================================================
@@ -1103,13 +1120,18 @@ Thank you!
     def calculate_profit_margin(self):
         """Calculate profit margin from all paid orders"""
         # Get all paid orders
-        paid_orders = db.fetch("SELECT items, total FROM orders WHERE status='Paid'")
+        paid_orders = db.fetch("SELECT items, total, tax, service, subtotal FROM orders WHERE status='Paid'")
         
-        total_revenue = 0.0
+        total_revenue_net = 0.0
         total_cost = 0.0
         
-        for items_str, order_total in paid_orders:
-            total_revenue += float(order_total)
+        for items_str, order_total, tax_amt, svc_amt, subtotal_amt in paid_orders:
+            # Exclude taxes/service from profit; prefer stored subtotal, else derive
+            if subtotal_amt is not None:
+                revenue_net = float(subtotal_amt)
+            else:
+                revenue_net = float(order_total) - float(tax_amt or 0) - float(svc_amt or 0)
+            total_revenue_net += revenue_net
             
             # Calculate cost for each item in the order
             if items_str:
@@ -1127,10 +1149,14 @@ Thank you!
                     except:
                         pass
         
-        total_profit = total_revenue - total_cost
-        profit_margin = (total_profit / total_revenue * 100) if total_revenue > 0 else 0
+        total_profit = total_revenue_net - total_cost
+        profit_margin = (total_profit / total_revenue_net * 100) if total_revenue_net > 0 else 0
         
-        self.lbl_total_revenue.config(text=f"${total_revenue:.2f}")
+        # #region agent log
+        import json, time; log_file = open(r'd:\Programmming\@Python\Titanium\.cursor\debug.log','a',encoding='utf-8'); log_file.write(json.dumps({"sessionId":"debug-session","runId":"pre-fix","hypothesisId":"HPROFIT","location":"main.py:calculate_profit_margin","message":"Computed profit excluding taxes","data":{"revenueNet":total_revenue_net,"cost":total_cost,"profit":total_profit,"margin":profit_margin,"timestamp":int(time.time()*1000)}})+"\n"); log_file.close()
+        # #endregion
+
+        self.lbl_total_revenue.config(text=f"${total_revenue_net:.2f}")
         self.lbl_total_cost.config(text=f"${total_cost:.2f}")
         self.lbl_total_profit.config(text=f"${total_profit:.2f}")
         self.lbl_profit_margin.config(text=f"{profit_margin:.2f}%")
