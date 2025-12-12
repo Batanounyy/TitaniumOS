@@ -13,7 +13,7 @@
 
 <div align="center">
 
-📄 **[Download Project Report (PDF)](https://github.com/Batanounyy/TitaniumOS/blob/6acebdea94dad1978d4af81b87bc16eea0a06071/System_Analysis_Project.pdf)** 📄
+📄 **[Download Project Report (PDF)](https://github.com/Batanounyy/TitaniumOS/blob/01d098b3409fb047ec1e6f6778de861b6fab120c/Project%20Report.pdf)** 📄
 
 </div>
 
